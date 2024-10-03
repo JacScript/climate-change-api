@@ -28,51 +28,51 @@ const newspapers = [
     address: 'https://www.telegraph.co.uk/climate-change',
     base: 'https://www.telegraph.co.uk',
 },
-{
-    name: 'nyt',
-    address: 'https://www.nytimes.com/international/section/climate',
-    base: '',
-},
-{
-    name: 'latimes',
-    address: 'https://www.latimes.com/environment',
-    base: '',
-},
-{
-    name: 'smh',
-    address: 'https://www.smh.com.au/environment/climate-change',
-    base: 'https://www.smh.com.au',
-},
-{
-    name: 'un',
-    address: 'https://www.un.org/climatechange',
-    base: '',
-},
-{
-    name: 'bbc',
-    address: 'https://www.bbc.co.uk/news/science_and_environment',
-    base: 'https://www.bbc.co.uk',
-},
-{
-    name: 'es',
-    address: 'https://www.standard.co.uk/topic/climate-change',
-    base: 'https://www.standard.co.uk'
-},
-{
-    name: 'sun',
-    address: 'https://www.thesun.co.uk/topic/climate-change-environment/',
-    base: ''
-},
-{
-    name: 'dm',
-    address: 'https://www.dailymail.co.uk/news/climate_change_global_warming/index.html',
-    base: ''
-},
-{
-    name: 'nyp',
-    address: 'https://nypost.com/tag/climate-change/',
-    base: ''
-}
+// {
+//     name: 'nyt',
+//     address: 'https://www.nytimes.com/international/section/climate',
+//     base: '',
+// },
+// {
+//     name: 'latimes',
+//     address: 'https://www.latimes.com/environment',
+//     base: '',
+// },
+// {
+//     name: 'smh',
+//     address: 'https://www.smh.com.au/environment/climate-change',
+//     base: 'https://www.smh.com.au',
+// },
+// {
+//     name: 'un',
+//     address: 'https://www.un.org/climatechange',
+//     base: '',
+// },
+// {
+//     name: 'bbc',
+//     address: 'https://www.bbc.co.uk/news/science_and_environment',
+//     base: 'https://www.bbc.co.uk',
+// },
+// {
+//     name: 'es',
+//     address: 'https://www.standard.co.uk/topic/climate-change',
+//     base: 'https://www.standard.co.uk'
+// },
+// {
+//     name: 'sun',
+//     address: 'https://www.thesun.co.uk/topic/climate-change-environment/',
+//     base: ''
+// },
+// {
+//     name: 'dm',
+//     address: 'https://www.dailymail.co.uk/news/climate_change_global_warming/index.html',
+//     base: ''
+// },
+// {
+//     name: 'nyp',
+//     address: 'https://nypost.com/tag/climate-change/',
+//     base: ''
+// }
   // {
   //   name: "thetimes",
   //   address: "https://www.thetimes.com/uk/environment/climate-change",
@@ -113,13 +113,14 @@ application.get('/news', async (req, res) => {
 
                 if(name === "cityam") {
                    $('div.card__content').each(function () {
-                    const title = $(this).find('h3.card__title').text()
+                    const title = $(this).find('h3').text()
                     const url = $(this).find('a').attr('href');
 
                     if( title && url ){
                       articles.push({
                         title,
-                        url: url.startsWith('http') ? url : `${address}${url}`
+                        url: url.startsWith('http') ? url : `${address}${url}`,
+                        source: name
                       });
                     }
                    })
@@ -165,7 +166,23 @@ application.get('/news', async (req, res) => {
                             });
                         }
                     });
-                } else {
+                }else if( name === "nyt"){
+                  $('div').each(function () {
+                    const title = $(this).find('').text();
+                    const url  = $(this).find('a').attr('href');
+
+                    if(title && url) {
+                      articles.push({
+                        title,
+                        url: url.startsWith('http') ? url : `${address}${url}`, // Handle relative URLs
+                        source: name,
+                      })
+                    }
+                  })
+                }
+                
+                
+                else {
                     // Default extraction logic if newspaper isn't handled
                     $('a').each(function () {
                         const title = $(this).text().trim();  // Get the title text
